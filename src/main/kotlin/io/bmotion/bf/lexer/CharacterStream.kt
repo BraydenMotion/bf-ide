@@ -2,8 +2,6 @@ package io.bmotion.bf.lexer
 
 import java.io.File
 
-const val NULL = (-1).toChar()
-
 class CharacterStream(private val content: String) {
 
     constructor(file: File) : this(file.readText())
@@ -11,29 +9,21 @@ class CharacterStream(private val content: String) {
     private var index: Int = -1
     var line: Int = 1
         private set
-    var position: Int = 0
+    var position: Int = 1
         private set
 
-    fun peek(): Char {
-        return if (!canRead())
-            NULL
-        else
-            content[index+1]
-    }
+    // TODO: add event
+    fun peek(): Char = if (canRead()) content[index + 1] else throw Exception()
 
     fun take(): Char = peek().also {
+        index++
+        position++
 
-        when {
-            it != NULL -> {
-                index++
-                position++
-            }
-            it == '\n' -> {
-                position = 1
-                line++
-            }
+        if (it == '\n') {
+            position = 1
+            line++
         }
     }
 
-    fun canRead(): Boolean = content.length > index+1
+    fun canRead(): Boolean = content.length > index + 1
 }
