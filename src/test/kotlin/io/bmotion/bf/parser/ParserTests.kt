@@ -149,6 +149,13 @@ class LoopParserTests: StringSpec({
         }
     }
 
+    "Parse missing closing bracket" {
+        val tokens = Lexer.process("[+>")
+        shouldThrow<Exception> {
+            LoopParser.parse(tokens)
+        }
+    }
+
     "Parse populated loop" {
         val tokens = Lexer.process("[+>++>+++>++++,.]")
         val instruction = LoopParser.parse(tokens)
